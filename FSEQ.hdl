@@ -17,12 +17,36 @@ CHIP FSEQ {
   OUT E, F, G;
 
     PARTS:
+    
+    // Import F chips
+    FZero(A=A, B=B, C=NextC, D=NextD, F=fzeroF, G=fzeroG);
+    FOne(A=A, B=B, C=NextC, D=NextD, F=foneF, G=foneG);
+    FTwo(A=A, B=B, C=NextC, D=NextD, F=ftwoF, G=ftwoG);
+    FThree(A=A, B=B, C=NextC, D=NextD, E=ethreeE, F=fthreeF, G=fthreeG);
+    
+    // Choosing the Output F
+    Mux(a=foneF, b=fzeroF, sel=f0, out=choiceF1);
+    Mux(a=fthreeF, b=ftwoF, sel=f0, out=choiceF2);
+    Mux(a=choiceF2, b=choiceF1, sel=f1, out=Fin);
+    Or(a=Fin, b=Fin, out=F);
+    
+    // Store Ft
+    Mux(a=Fin, b=C, sel=load, out=NC);
+    DFF(in=NC, out=Cbuff, out=NextC);
 
-    DFF(in=Fin, out=buffer1, out=PreviousF);
-    DFF(in=Gin, out=buffer2, out=PreviousG);
+    // Choosing the Output G
+    Mux(a=foneG, b=fzeroG, sel=f0, out=choiceG1);
+    Mux(a=fthreeG, b=ftwoG, sel=f0, out=choiceG2);
+    Mux(a=choiceG2, b=choiceG1, sel=f1, out=Gin);
+    Or(a=Gin, b=Gin, out=G);
 
-    Mux(a=PreviousF, b=C, sel=load, out=NextC);
-    Mux(a=PreviousG, b=D, sel=load, out=NextD);
+    // Store Gt
+    Mux(a=Gin, b=D, sel=load, out=ND);
+    DFF(in=ND, out=Dbuff, out=NextD);
 
-    FALL(f0=f0, f1=f1, A=A, B=B, C=NextC, D=NextD, E=E, F=Fin, G=Gin);
+    // Choosing the Output E
+    Not(in=f0, out=Notf0);
+    Not(in=f1, out=Notf1);
+    And(a=Notf0, b=Notf1, out=trueE);
+    Mux(a=trueE, b=ethreeE, sel=trueE, out=E);
 }
