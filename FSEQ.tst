@@ -34,3 +34,28 @@ tock,
 
 output;
 
+tick,
+tock,
+
+output;
+
+set load 1;
+
+tick,
+tock,
+
+output;
+
+set load 0;
+set f1 0;
+set f0 0;
+
+tick,
+tock,
+
+output;
+
+tick,
+tock,
+
+output;

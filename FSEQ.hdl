@@ -1,6 +1,6 @@
-// File name: FALL.hdl
+// File name: FSEQ.hdl
 /**
- * FALL gate.
+ * FSEQ gate.
  *
  * Inputs: A, B, C, D, f0, f1, Load;
  * Outputs: E, F, G
@@ -41,6 +41,11 @@ CHIP FSEQ {
     Or(a=Gin, b=Gin, out=G);
 
     // Store Gt
+    // Mux(a=g,b=Gin,sel=load,out=a);
+    // DFF(in=a,out=out,out=g);
+    // Determine Load and output
+    // Mux(a=g, b=D, sel=load, out=NextD);
+
     Mux(a=Gin, b=D, sel=load, out=ND);
     DFF(in=ND, out=Dbuff, out=NextD);
 
