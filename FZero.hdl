@@ -1,0 +1,26 @@
+// File name: FZero.
+/**
+ * FZero gate.
+ *
+ * Inputs: A, B, C, D
+ * Outputs: F, G
+ *
+ * Inputs used: C, D
+ *
+ * Logic Circuit:
+ * ¬C -> F
+ * ¬D -> G
+ */
+
+CHIP FZero {
+    IN A, B, C, D;
+    OUT F, G;
+
+    PARTS:
+
+    // Output for F gate
+    Not(in=C, out=F);
+
+    // Output for G gate
+    Not(in=D, out=G);
+}

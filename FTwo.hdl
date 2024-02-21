@@ -1,0 +1,26 @@
+// File name: FTwo.hdl
+/**
+ * FTwo gate.
+ *
+ * Inputs: A, B, C, D
+ * Outputs: F, G
+ *
+ * Inputs used: A, B, C, D
+ *
+ * Logic Circuit:
+ * AC -> F
+ * BD -> G
+ */
+
+CHIP FTwo {
+    IN A, B, C, D;
+    OUT F, G;
+
+    PARTS:
+
+    // Output for F gate
+    Or(a=A, b=C, out=F);
+
+    // Output for G gate
+    Or(a=B, b=D, out=G);
+}

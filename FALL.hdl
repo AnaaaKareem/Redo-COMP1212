@@ -1,0 +1,44 @@
+// File name: FALL.hdl
+/**
+ * FALL gate.
+ *
+ * Inputs: A, B, C, D, f0, f1
+ * Outputs: E, F, G
+ *
+ * Inputs used: A, B, C, D, f0, f1
+ *
+ * Logic Circuit:
+ * 
+ * 
+ */
+
+CHIP FALL {
+    IN f0, f1, A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    // Import F chips
+    FZero(A=A, B=B, C=C, D=D, F=fzeroF, G=fzeroG);
+    FOne(A=A, B=B, C=C, D=D, F=foneF, G=foneG);
+    FTwo(A=A, B=B, C=C, D=D, F=ftwoF, G=ftwoG);
+    FThree(A=A, B=B, C=C, D=D, E=ethreeE, F=fthreeF, G=fthreeG);
+
+    // Choosing the Output F
+    Mux(a=foneF, b=fzeroF, sel=f0, out=choiceF1);
+    Mux(a=fthreeF, b=ftwoF, sel=f0, out=choiceF2);
+    Mux(a=choiceF2, b=choiceF1, sel=f1, out=F);
+
+    // Choosing the Output G
+    Mux(a=foneG, b=fzeroG, sel=f0, out=choiceG1);
+    Mux(a=fthreeG, b=ftwoG, sel=f0, out=choiceG2);
+    Mux(a=choiceG2, b=choiceG1, sel=f1, out=G);
+
+    // Choosing the Output E
+    Not(in=f0, out=Notf0);
+    Not(in=f1, out=Notf1);
+    And(a=Notf0, b=Notf1, out=trueE);
+    
+    // DMux(in=ethreeE, sel=trueE, a=a, b=E);
+    Mux(a=trueE, b=ethreeE, sel=trueE, out=E);
+}

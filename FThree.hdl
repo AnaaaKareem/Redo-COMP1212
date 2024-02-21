@@ -1,0 +1,90 @@
+// File name: FThree.hdl
+/**
+ * FThree gate.
+ *
+ * Inputs: A, B, C, D
+ * Outputs: E, F, G
+ *
+ * Inputs used: A, B, C, D
+ *
+ * Logic Circuit:
+ * AC + BCD + ABD -> E
+ * ¬A¬BC + ¬AC¬D + A¬B¬C + A¬C¬D + ¬AB¬CD + ABCD -> F
+ * ¬BD + B¬D -> G
+ */
+
+CHIP FThree {
+    IN A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    // Not Gates
+    Not(in=A, out=NotA); // ¬A
+    Not(in=B, out=NotB); // ¬B
+    Not(in=C, out=NotC); // ¬C
+    Not(in=D, out=NotD); // ¬D
+
+    //// E Gate Circuit
+
+    // AC
+    And(a=A, b=C, out=AC);
+    
+    // BCD
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=D, out=BCD);
+
+    // ABD
+    And(a=A, b=B, out=AB);
+    And(a=AB, b=D, out=ABD);
+
+    // Output for E gate
+    Or(a=AC, b=BCD, out=ACBCD);
+    Or(a=ACBCD, b=ABD, out=E);
+
+    //// F Gate Circuit
+
+    // ¬A¬BC
+    And(a=NotA, b=NotB, out=¬A¬B);
+    And(a=¬A¬B, b=C, out=¬A¬BC);
+
+    // ¬AC¬D
+    And(a=NotA, b=C, out=¬AC);
+    And(a=¬AC, b=NotD, out=¬AC¬D);
+
+    // A¬B¬C
+    And(a=A, b=NotB, out=A¬B);
+    And(a=A¬B, b=NotC, out=A¬B¬C);
+
+    // A¬C¬D
+    And(a=A, b=NotC, out=A¬C);
+    And(a=A¬C, b=NotD, out=A¬C¬D);
+
+    // ¬AB¬CD
+    And(a=NotA, b=B, out=¬AB);
+    And(a=NotC, b=D, out=¬CD);
+    And(a=¬AB, b=¬CD, out=¬AB¬CD);
+
+    // ABCD
+    // AB Line 28
+    And(a=C, b=D, out=CD);
+    And(a=AB, b=CD, out=ABCD);
+
+    // Output for F gate
+    Or(a=¬A¬BC, b=¬AC¬D, out=¬A¬BC¬AC¬D);
+    Or(a=A¬B¬C, b=A¬C¬D, out=A¬B¬CA¬C¬D);
+    Or(a=¬AB¬CD, b=ABCD, out=¬AB¬CDABCD);
+    Or(a=¬A¬BC¬AC¬D, b=A¬B¬CA¬C¬D, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
+    Or(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬AB¬CDABCD, out=F);
+
+    //// G Gate Circuit
+
+    // ¬BD
+    And(a=NotB, b=D, out=¬BD);
+
+    // B¬D
+    And(a=B, b=NotD, out=B¬D);
+
+    // Output for G gate
+    Or(a=¬BD, b=B¬D, out=G);
+}

@@ -1,0 +1,28 @@
+// File name: FALL.hdl
+/**
+ * FALL gate.
+ *
+ * Inputs: A, B, C, D, f0, f1, Load;
+ * Outputs: E, F, G
+ *
+ * Inputs used: A, B, C, D, f0, f1
+ *
+ * Logic Circuit:
+ * 
+ * 
+ */
+
+CHIP FSEQ {
+  IN A, B, C, D, f0, f1, load;
+  OUT E, F, G;
+
+    PARTS:
+
+    DFF(in=Fin, out=buffer1, out=PreviousF);
+    DFF(in=Gin, out=buffer2, out=PreviousG);
+
+    Mux(a=PreviousF, b=C, sel=load, out=NextC);
+    Mux(a=PreviousG, b=D, sel=load, out=NextD);
+
+    FALL(f0=f0, f1=f1, A=A, B=B, C=NextC, D=NextD, E=E, F=Fin, G=Gin);
+}
