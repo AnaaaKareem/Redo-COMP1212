@@ -18,11 +18,16 @@ CHIP FSEQ {
 
     PARTS:
 
+    Not(in=load, out=notload);
+    Mux(a=load, b=notload, sel=load, out=zero);
+
     DFF(in=Fin, out=out1);
-    DFF(in=out1, out=fout);
+    DFF(in=out1, out=out1.1);
+    And(a=out1, b=out1.1, out=fout);
 
     DFF(in=Gin, out=out2);
-    DFF(in=out2, out=gout);
+    DFF(in=out2, out=out2.1);
+    And(a=out2, b=out2.1, out=gout);
 
     Mux(a=fout, b=C, sel=load, out=NextC);
     Mux(a=gout, b=D, sel=load, out=NextD);
@@ -37,13 +42,13 @@ CHIP FSEQ {
     Mux(a=foneF, b=fzeroF, sel=f0, out=choiceF1);
     Mux(a=fthreeF, b=ftwoF, sel=f0, out=choiceF2);
     Mux(a=choiceF2, b=choiceF1, sel=f1, out=Fin);
-    Or(a=Fin, b=Fin, out=F);
+    And(a=Fin, b=Fin, out=F);
 
     // Choosing the Output G
     Mux(a=foneG, b=fzeroG, sel=f0, out=choiceG1);
     Mux(a=fthreeG, b=ftwoG, sel=f0, out=choiceG2);
     Mux(a=choiceG2, b=choiceG1, sel=f1, out=Gin);
-    Or(a=Gin, b=Gin, out=G);
+    And(a=Gin, b=Gin, out=G);
 
     // Choosing the Output E
     Not(in=f0, out=Notf0);
