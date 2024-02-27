@@ -18,21 +18,20 @@ CHIP FSEQ {
 
     PARTS:
 
-    Not(in=load, out=notload);
-    Mux(a=load, b=notload, sel=load, out=zero);
-
-
-    DFF(in=Fin, out=f);
+    Not(in=Fin, out=NotFin);
+    Mux(a=Fin, b=NotFin, sel=load, out=fin);
+    DFF(in=fin, out=f);
     DFF(in=f, out=ff);
-    //Mux(a=ff, b=f, sel=f, out=fout);
-    DMux(in=f, sel=ff, a=out, b=fout);
+    DMux(in=f, sel=ff, a=fout, b=out);
+    
 
     DFF(in=Gin, out=g);
-    DFF(in=g, out=gg);
-    And(a=g, b=gg, out=gout);
+    DFF(in=NextD, out=ND);
+    Mux(a=g, b=ND, sel=g, out=gg);
 
-    Mux(a=fout, b=C, sel=load, out=NextC);
-    Mux(a=gout, b=D, sel=load, out=NextD);
+
+    Mux(a=f, b=C, sel=load, out=NextC);
+    Mux(a=gg, b=D, sel=load, out=NextD);
 
     // Import F chips
     FZero(A=A, B=B, C=NextC, D=NextD, F=fzeroF, G=fzeroG);
