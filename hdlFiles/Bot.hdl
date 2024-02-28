@@ -1,0 +1,15 @@
+CHIP Bot {
+    IN a[4], b[4];
+    OUT out[4];
+
+    PARTS:
+    Or(a=a[0], b=b[0], out=ab1);
+    Or(a=a[1], b=b[1], out=ab2);
+    Or(a=a[2], b=b[2], out=ab3);
+    Or(a=a[3], b=b[3], out=ab4);
+
+    Not(in=ab1, out=out[0]);
+    Not(in=ab2, out=out[1]);
+    Not(in=ab3, out=out[2]);
+    Not(in=ab4, out=out[3]);
+}
