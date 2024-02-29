@@ -108,11 +108,15 @@ CHIP FThree {
     //// G Gate Circuit
 
     // ¬BD
-    And(a=NotB, b=D, out=¬BD);
+	Nand(a=NotB, b=D, out=NBD);
+    Nand(a=NBD, b=NBD, out=¬BD);
 
     // B¬D
-    And(a=B, b=NotD, out=B¬D);
+    Nand(a=B, b=NotD, out=BND);
+    Nand(a=BND, b=BND, out=B¬D);
 
     // Output for G gate
-    Or(a=¬BD, b=B¬D, out=G);
+	Nand(a=¬BD, b=¬BD, out=NNBBDD);
+    Nand(a=B¬D, b=B¬D, out=BBNNDD);
+    Nand(a=NNBBDD, b=BBNNDD, out=G);
 }
