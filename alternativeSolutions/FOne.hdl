@@ -1,0 +1,28 @@
+// File name: FOne.hdl
+/**
+ * FOne gate.
+ *
+ * Inputs: A, B, C, D
+ * Outputs: F, G
+ *
+ * Inputs used: A, B, C, D
+ *
+ * Logic Circuit:
+ * AC -> F
+ * BD -> G
+ */
+
+CHIP FOne {
+    IN A, B, C, D;
+    OUT F, G;
+
+    PARTS:
+
+    // Output for F gate
+    Nand(a=A, b=C, out=NAC);
+    Nand(a=NAC, b=NAC, out=F);
+
+    // Output for G gate
+    Nand(a=B, b=D, out=NBD);
+    Nand(a=NBD, b=NBD, out=G);
+}

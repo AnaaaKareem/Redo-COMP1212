@@ -1,0 +1,101 @@
+// File name: FThree.hdl
+/**
+ * FThree gate.
+ *
+ * Inputs: A, B, C, D
+ * Outputs: E, F, G
+ *
+ * Inputs used: A, B, C, D
+ *
+ * Logic Circuit:
+ * AC + BCD + ABD -> E
+ * ¬A¬BC + ¬AC¬D + A¬B¬C + A¬C¬D + ¬AB¬CD + ABCD -> F
+ * ¬BD + B¬D -> G
+ */
+
+CHIP FThree {
+    IN A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    // Not Gates
+    Nand(a=A, b=A, out=NotA); // ¬A
+    Nand(a=B, b=B, out=NotB); // ¬B
+    Nand(a=C, b=C, out=NotC); // ¬C
+    Nand(a=D, b=D, out=NotD); // ¬D
+
+    //// E Gate Circuit
+
+    // AC
+    Nand(a=A, b=C, out=AACC);
+    Nand(a=AACC, b=AACC, out=AC);
+    
+    // BCD
+    Nand(a=B, b=C, out=BBCC);
+    Nand(a=BBCC, b=BBCC, out=BC);
+    Nand(a=BC, b=D, out=BBCCDD);
+    Nand(a=BBCCDD, b=BBCCDD, out=BCD);
+
+    // ABD
+    Nand(a=A, b=B, out=AABB);
+    Nand(a=AABB, b=AABB, out=AB);
+
+    Nand(a=AB, b=D, out=AABBDD);
+    Nand(a=AABBDD, b=AABBDD, out=ABD);
+
+    // Output for E gate
+    Nand(a=AC, b=AC, out=AAACCC);
+    Nand(a=BCD, b=BCD, out=BBBCCCDDD);
+    Nand(a=AAACCC, b=BBBCCCDDD, out=ACBCD);
+
+    Nand(a=ACBCD, b=ACBCD, out=AACCBBCCDD);
+    Nand(a=ABD, b=ABD, out=AAABBBDDD);
+    Nand(a=AACCBBCCDD, b=AAABBBDDD, out=E);
+
+    //// F Gate Circuit
+
+    // ¬A¬BC
+    And(a=NotA, b=NotB, out=¬A¬B);
+    And(a=¬A¬B, b=C, out=¬A¬BC);
+
+    // ¬AC¬D
+    And(a=NotA, b=C, out=¬AC);
+    And(a=¬AC, b=NotD, out=¬AC¬D);
+
+    // A¬B¬C
+    And(a=A, b=NotB, out=A¬B);
+    And(a=A¬B, b=NotC, out=A¬B¬C);
+
+    // A¬C¬D
+    And(a=A, b=NotC, out=A¬C);
+    And(a=A¬C, b=NotD, out=A¬C¬D);
+
+    // ¬AB¬CD
+    And(a=NotA, b=B, out=¬AB);
+    And(a=NotC, b=D, out=¬CD);
+    And(a=¬AB, b=¬CD, out=¬AB¬CD);
+
+    // ABCD
+    // AB Line 28
+    And(a=C, b=D, out=CD);
+    And(a=AB, b=CD, out=ABCD);
+
+    // Output for F gate
+    Or(a=¬A¬BC, b=¬AC¬D, out=¬A¬BC¬AC¬D);
+    Or(a=A¬B¬C, b=A¬C¬D, out=A¬B¬CA¬C¬D);
+    Or(a=¬AB¬CD, b=ABCD, out=¬AB¬CDABCD);
+    Or(a=¬A¬BC¬AC¬D, b=A¬B¬CA¬C¬D, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
+    Or(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬AB¬CDABCD, out=F);
+
+    //// G Gate Circuit
+
+    // ¬BD
+    And(a=NotB, b=D, out=¬BD);
+
+    // B¬D
+    And(a=B, b=NotD, out=B¬D);
+
+    // Output for G gate
+    Or(a=¬BD, b=B¬D, out=G);
+}
