@@ -56,37 +56,54 @@ CHIP FThree {
     //// F Gate Circuit
 
     // ¬A¬BC
-    And(a=NotA, b=NotB, out=¬A¬B);
-    And(a=¬A¬B, b=C, out=¬A¬BC);
+	Nand(a=NotA, b=NotB, out=NANB);
+    Nand(a=NANB, b=NANB, out=¬A¬B);
+	Nand(a=¬A¬B, b=C, out=NANBC);
+    Nand(a=NANBC, b=NANBC, out=¬A¬BC);
 
     // ¬AC¬D
-    And(a=NotA, b=C, out=¬AC);
-    And(a=¬AC, b=NotD, out=¬AC¬D);
+	Nand(a=NotA, b=C, out=NAC);
+    Nand(a=NAC, b=NAC, out=¬AC);
+	Nand(a=¬AC, b=NotD, out=NACND);
+    Nand(a=NACND, b=NACND, out=¬AC¬D);
 
     // A¬B¬C
-    And(a=A, b=NotB, out=A¬B);
-    And(a=A¬B, b=NotC, out=A¬B¬C);
+	Nand(a=A, b=NotB, out=ANB);
+    Nand(a=ANB, b=ANB, out=A¬B);
+    Nand(a=A¬B, b=NotC, out=ANBNC);
+    Nand(a=ANBNC, b=ANBNC, out=A¬B¬C);
 
     // A¬C¬D
-    And(a=A, b=NotC, out=A¬C);
-    And(a=A¬C, b=NotD, out=A¬C¬D);
+    Nand(a=A, b=NotC, out=ANC);
+    Nand(a=ANC, b=ANC, out=A¬C);
+    Nand(a=A¬C, b=NotD, out=ANCND);
+    Nand(a=ANCND, b=ANCND, out=A¬C¬D);
 
     // ¬AB¬CD
-    And(a=NotA, b=B, out=¬AB);
-    And(a=NotC, b=D, out=¬CD);
-    And(a=¬AB, b=¬CD, out=¬AB¬CD);
+    Nand(a=NotA, b=B, out=NAB);
+    Nand(a=NAB, b=NAB, out=¬AB);
+    Nand(a=NotC, b=D, out=NCD);
+    Nand(a=NCD, b=NCD, out=¬CD);
+    Nand(a=¬AB, b=¬CD, out=NABNCD);
+    Nand(a=NABNCD, b=NABNCD, out=¬AB¬CD);
 
     // ABCD
-    // AB Line 28
-    And(a=C, b=D, out=CD);
-    And(a=AB, b=CD, out=ABCD);
+    Nand(a=C, b=D, out=CCDD);
+    Nand(a=CCDD, b=CCDD, out=CD);
+    Nand(a=AB, b=CD, out=AABBCCDD);
+    Nand(a=AABBCCDD, b=AABBCCDD, out=ABCD);
 
     // Output for F gate
-    Or(a=¬A¬BC, b=¬AC¬D, out=¬A¬BC¬AC¬D);
-    Or(a=A¬B¬C, b=A¬C¬D, out=A¬B¬CA¬C¬D);
-    Or(a=¬AB¬CD, b=ABCD, out=¬AB¬CDABCD);
-    Or(a=¬A¬BC¬AC¬D, b=A¬B¬CA¬C¬D, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
-    Or(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬AB¬CDABCD, out=F);
+    Nand(a=NANBC, b=NACND, out=¬A¬BC¬AC¬D);
+    Nand(a=ANBNC, b=ANCND, out=A¬B¬CA¬C¬D);
+    Nand(a=ABCD, b=ABCD, out=AAABBBCCCDDD);
+    Nand(a=NABNCD, b=AAABBBCCCDDD, out=¬AB¬CDABCD);
+    Nand(a=¬A¬BC¬AC¬D, b=¬A¬BC¬AC¬D, out=NANBCNACND);
+    Nand(a=A¬B¬CA¬C¬D, b=A¬B¬CA¬C¬D, out=ANBNCANCND);
+    Nand(a=NANBCNACND, b=ANBNCANCND, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
+    Nand(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, out=NANBCNACNDANBNCANCND);
+    Nand(a=¬AB¬CDABCD, b=¬AB¬CDABCD, out=NABNCDABCD);
+    Nand(a=NANBCNACNDANBNCANCND, b=NABNCDABCD, out=F);
 
     //// G Gate Circuit
 
