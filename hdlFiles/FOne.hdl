@@ -1,15 +1,12 @@
-// File name: FOne.hdl
 /**
  * FOne gate.
+ * File name: FOne.hdl
+ * Description: Used to negate the input of A & B using C & D
+ * Used in: FALL
  *
  * Inputs: A, B, C, D
  * Outputs: F, G
- *
- * Inputs used: A, B, C, D
- *
- * Logic Circuit:
- * AC -> F
- * BD -> G
+ * 
  */
 
 CHIP FOne {

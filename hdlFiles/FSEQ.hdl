@@ -1,14 +1,17 @@
-// File name: FSEQ.hdl
 /**
  * FSEQ gate.
+ * File name: FSEQ.hdl
+ * Description: Used to perform basic calulations using FALL chip
+ * to select between different operations while using Data Flip-Flop 
+ * to store and recall previous value.
  *
- * Inputs: A, B, C, D, f0, f1, Load;
+ * Inputs: A, B, C, D, f0, f1, load
  * Outputs: E, F, G
  *
- * Inputs used: A, B, C, D, f0, f1
- *
- * Logic Circuit:
- * 
+ * Notes:
+ * If load is equal to 1 pass the current C and D value from current Inputs
+ * If load is equal to 0 recall the previous outputs F and G to be used as inputs for 
+ * current C and D.
  * 
  */
 
@@ -18,23 +21,27 @@ CHIP FSEQ {
 
     PARTS:
 
+    // Store the previous D value
     DFF(in=NewD, out=NextD);
     Not(in=Fin, out=NotFin);
 
+    // Output F and G
     And(a=Fin, b=Fin, out=F);
     And(a=Gin, b=Gin, out=G);
 
+    // Check load to either pass C and D or recall F and G
     Mux(a=prevF, b=C, sel=load, out=NewC);
     Mux(a=prevG, b=D, sel=load, out=NewD);
 
+    // Perform Calculation
     FALL(f0=f0, f1=f1, A=A, B=B, C=NewC, D=NewD, E=E, F=Fin, G=Gin);
 
+    // Check for load to negate the value of C in t+1
     Mux(a=Fin, b=NotFin, sel=load, out=fin);
     DFF(in=fin, out=prevF);
 
-    
+    // Store and recall Gt for D+1
     DFF(in=Gin, out=g);
     DFF(in=g, out=gg);
     Mux(a=gg, b=g, sel=NextD, out=prevG);
-
 }

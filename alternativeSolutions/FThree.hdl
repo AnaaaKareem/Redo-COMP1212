@@ -1,16 +1,12 @@
-// File name: FThree.hdl
 /**
  * FThree gate.
+ * File name: FThree.hdl
+ * Description: Used as an ADD operation with an extra output as a carry
+ * Used in: FALL
  *
  * Inputs: A, B, C, D
  * Outputs: E, F, G
- *
- * Inputs used: A, B, C, D
- *
- * Logic Circuit:
- * AC + BCD + ABD -> E
- * ¬A¬BC + ¬AC¬D + A¬B¬C + A¬C¬D + ¬AB¬CD + ABCD -> F
- * ¬BD + B¬D -> G
+ * 
  */
 
 CHIP FThree {

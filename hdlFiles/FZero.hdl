@@ -1,15 +1,12 @@
-// File name: FZero.
 /**
  * FZero gate.
+ * File name: FZero.hdl
+ * Description: Used to negate the output
+ * Used in: FALL
  *
  * Inputs: A, B, C, D
  * Outputs: F, G
- *
- * Inputs used: C, D
- *
- * Logic Circuit:
- * ¬C -> F
- * ¬D -> G
+ * 
  */
 
 CHIP FZero {

@@ -34,8 +34,23 @@ tock,
 
 output;
 
-set f1 1,
-set f0 1,
+
+set f1 0,
+set f0 0,
+
+tick,
+tock,
+
+output;
+
+
+set f1 0,
+set f0 0,
+
+tick,
+tock,
+
+output;
 
 tick,
 tock,
@@ -49,6 +64,9 @@ tick,
 tock,
 
 output;
+
+set f1 1,
+set f0 1,
 
 tick,
 tock,

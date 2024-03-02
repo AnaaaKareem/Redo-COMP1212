@@ -1,0 +1,213 @@
+/**
+ * FALL gate.
+ * File name: FALL.hdl
+ * Description: Selects between different logic circuits / operations similar to an Arithmetic Logic Unit (ALU).
+ * Used in: FSEQ
+ *
+ * Inputs: A, B, C, D, f0, f1
+ * Outputs: E, F, G
+ * 
+ */
+
+CHIP FALL {
+    IN f0, f1, A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    //// Not Gates
+    Nand(a=A, b=A, out=NotA); // ¬A
+    Nand(a=B, b=B, out=NotB); // ¬B
+    Nand(a=C, b=C, out=NotC); // ¬C
+    Nand(a=D, b=D, out=NotD); // ¬D
+
+    //// Import FZero chip
+    // Output for FZero F gate
+    Nand(a=C, b=C, out=fzeroF);
+    // Output for FZero G gate
+    Nand(a=D, b=D, out=fzeroG);
+
+    //// Import FOne chip
+    // Output for FOne F gate
+    Nand(a=A, b=C, out=NAC);
+    Nand(a=NAC, b=NAC, out=foneF);
+    // Output for FOne G gate
+    Nand(a=B, b=D, out=BD);
+    Nand(a=BD, b=BD, out=foneG);
+
+    //// Import FTwo chip
+    // Output for FTwo F gate
+    Nand(a=A, b=A, out=AA);
+    Nand(a=C, b=C, out=CC);
+    Nand(a=AA, b=CC, out=ftwoF);
+    // Output for FTwo G gate
+    Nand(a=B, b=B, out=BB);
+    Nand(a=D, b=D, out=DD);
+    Nand(a=BB, b=DD, out=ftwoG);
+
+    //// Import FThree chip
+
+    /// Output for FThree E gate
+    // AC
+    Nand(a=A, b=C, out=AACC);
+    Nand(a=AACC, b=AACC, out=AC);
+
+    // BCD
+    Nand(a=B, b=C, out=BBCC);
+    Nand(a=BBCC, b=BBCC, out=BC);
+    Nand(a=BC, b=D, out=BBCCDD);
+    Nand(a=BBCCDD, b=BBCCDD, out=BCD);
+
+    // ABD
+    Nand(a=A, b=B, out=AABB);
+    Nand(a=AABB, b=AABB, out=AB);
+    Nand(a=AB, b=D, out=AABBDD);
+    Nand(a=AABBDD, b=AABBDD, out=ABD);
+
+    // Output for E gate
+    Nand(a=AC, b=AC, out=AAACCC);
+    Nand(a=BCD, b=BCD, out=BBBCCCDDD);
+    Nand(a=AAACCC, b=BBBCCCDDD, out=ACBCD);
+    Nand(a=ACBCD, b=ACBCD, out=AACCBBCCDD);
+    Nand(a=ABD, b=ABD, out=AAABBBDDD);
+    Nand(a=AACCBBCCDD, b=AAABBBDDD, out=ethreeE);
+
+    /// Output for FThree F gate
+
+    // ¬A¬BC
+	Nand(a=NotA, b=NotB, out=NANB);
+    Nand(a=NANB, b=NANB, out=¬A¬B);
+	Nand(a=¬A¬B, b=C, out=NANBC);
+    Nand(a=NANBC, b=NANBC, out=¬A¬BC);
+
+    // ¬AC¬D
+	Nand(a=NotA, b=C, out=NAC2);
+    Nand(a=NAC2, b=NAC2, out=¬AC);
+	Nand(a=¬AC, b=NotD, out=NAC2ND);
+    Nand(a=NAC2ND, b=NAC2ND, out=¬AC¬D);
+
+    // A¬B¬C
+	Nand(a=A, b=NotB, out=ANB);
+    Nand(a=ANB, b=ANB, out=A¬B);
+    Nand(a=A¬B, b=NotC, out=ANBNC);
+    Nand(a=ANBNC, b=ANBNC, out=A¬B¬C);
+
+    // A¬C¬D
+    Nand(a=A, b=NotC, out=ANC);
+    Nand(a=ANC, b=ANC, out=A¬C);
+    Nand(a=A¬C, b=NotD, out=ANCND);
+    Nand(a=ANCND, b=ANCND, out=A¬C¬D);
+
+    // ¬AB¬CD
+    Nand(a=NotA, b=B, out=NAB);
+    Nand(a=NAB, b=NAB, out=¬AB);
+    Nand(a=NotC, b=D, out=NCD);
+    Nand(a=NCD, b=NCD, out=¬CD);
+    Nand(a=¬AB, b=¬CD, out=NABNCD);
+    Nand(a=NABNCD, b=NABNCD, out=¬AB¬CD);
+
+    // ABCD
+    Nand(a=C, b=D, out=CCDD);
+    Nand(a=CCDD, b=CCDD, out=CD);
+    Nand(a=AB, b=CD, out=AABBCCDD);
+    Nand(a=AABBCCDD, b=AABBCCDD, out=ABCD);
+
+    // Output for F gate
+    Nand(a=NANBC, b=NAC2ND, out=¬A¬BC¬AC¬D);
+    Nand(a=ANBNC, b=ANCND, out=A¬B¬CA¬C¬D);
+    Nand(a=ABCD, b=ABCD, out=AAABBBCCCDDD);
+    Nand(a=NABNCD, b=AAABBBCCCDDD, out=¬AB¬CDABCD);
+    Nand(a=¬A¬BC¬AC¬D, b=¬A¬BC¬AC¬D, out=NANBCNACND);
+    Nand(a=A¬B¬CA¬C¬D, b=A¬B¬CA¬C¬D, out=ANBNCANCND);
+    Nand(a=NANBCNACND, b=ANBNCANCND, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
+    Nand(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, out=NANBCNACNDANBNCANCND);
+    Nand(a=¬AB¬CDABCD, b=¬AB¬CDABCD, out=NABNCDABCD);
+    Nand(a=NANBCNACNDANBNCANCND, b=NABNCDABCD, out=fthreeF);
+
+    /// Output for FThree G gate
+    // ¬BD
+	Nand(a=NotB, b=D, out=NBD);
+    Nand(a=NBD, b=NBD, out=¬BD);
+    // B¬D
+    Nand(a=B, b=NotD, out=BND);
+    Nand(a=BND, b=BND, out=B¬D);
+    // Output for G gate
+	Nand(a=¬BD, b=¬BD, out=NNBBDD);
+    Nand(a=B¬D, b=B¬D, out=BBNNDD);
+    Nand(a=NNBBDD, b=BBNNDD, out=fthreeG);
+
+    //// Negating selectors
+	Nand(a=f0, b=f0, out=nf0);
+	Nand(a=f1, b=f1, out=nf1);
+
+    //// Choosing the Output F    
+    Nand(a=foneF, b=nf0, out=foF);
+    Nand(a=foF, b=foF, out=foF0);
+    Nand(a=fzeroF, b=f0, out=fzF);
+    Nand(a=fzF, b=fzF, out=fzF1);
+    Nand(a=foF0, b=foF0, out=cfoF0);
+    Nand(a=fzF1, b=fzF1, out=cfzF1);
+    Nand(a=cfoF0, b=cfzF1, out=choiceF1);
+
+    Nand(a=fthreeF, b=nf0, out=fthF);
+    Nand(a=fthF, b=fthF, out=fthF0);
+    Nand(a=ftwoF, b=f0, out=ftF);
+    Nand(a=ftF, b=ftF, out=ftF1);
+    Nand(a=fthF0, b=fthF0, out=cfthF0);
+    Nand(a=ftF1, b=ftF1, out=cftF1);
+    Nand(a=cfthF0, b=cftF1, out=choiceF2);
+
+    Nand(a=choiceF2, b=nf1, out=cF2);
+    Nand(a=cF2, b=cF2, out=cF20);
+    Nand(a=choiceF1, b=f1, out=cF1);
+    Nand(a=cF1, b=cF1, out=cF11);
+    Nand(a=cF20, b=cF20, out=ccF20);
+    Nand(a=cF11, b=cF11, out=ccF11);
+    Nand(a=ccF20, b=ccF11, out=F);
+
+    //// Choosing the Output G
+    Nand(a=foneG, b=nf0, out=foG);
+    Nand(a=foG, b=foG, out=foG0);
+    Nand(a=fzeroG, b=f0, out=fzG);
+    Nand(a=fzG, b=fzG, out=fzG1);
+    Nand(a=foG0, b=foG0, out=cfoG0);
+    Nand(a=fzG1, b=fzG1, out=cfzG1);
+    Nand(a=cfoG0, b=cfzG1, out=choiceG1);
+
+    Nand(a=fthreeG, b=nf0, out=fthG);
+    Nand(a=fthG, b=fthG, out=fthG0);
+    Nand(a=ftwoG, b=f0, out=ftG);
+    Nand(a=ftG, b=ftG, out=ftG1);
+    Nand(a=fthG0, b=fthG0, out=cfthG0);
+    Nand(a=ftG1, b=ftG1, out=cftG1);
+    Nand(a=cfthG0, b=cftG1, out=choiceG2);
+
+    Nand(a=choiceG2, b=nf1, out=cG2);
+    Nand(a=cG2, b=cG2, out=cG20);
+    Nand(a=choiceG1, b=f1, out=cG1);
+    Nand(a=cG1, b=cG1, out=cG11);
+    Nand(a=cG20, b=cG20, out=ccG20);
+    Nand(a=cG11, b=cG11, out=ccG11);
+    Nand(a=ccG20, b=ccG11, out=G);
+
+    //// Choosing the Output E
+    Nand(a=nf0, b=nf1, out=nf0nf1);
+    Nand(a=nf0nf1, b=nf0nf1, out=trueE);
+    Nand(a=trueE, b=trueE, out=ntrueE);
+    
+    /// DMux(in=ethreeE, sel=trueE, a=a, b=E);
+    Nand(a=ethreeE, b=ntrueE, out=etEntE);
+    Nand(a=etEntE, b=etEntE, out=a);
+	
+	Nand(a=ethreeE, b=trueE, out=etEtE);
+    Nand(a=etEtE, b=etEtE, out=E);
+    
+    /// Mux(a=trueE, b=ethreeE, sel=trueE, out=E);
+	//Nand(a=trueE, b=ntrueE, out=trueEntrueE);
+    //Nand(a=trueEntrueE, b=trueEntrueE, out=tEntE0);
+	//Nand(a=ethreeE, b=trueE, out=ethreeEtrueE);
+    //Nand(a=ethreeEtrueE, b=ethreeEtrueE, out=etEtE1);
+	//Nand(a=tEntE0, b=tEntE0, out=ctEntE0);
+    //Nand(a=etEtE1, b=etEtE1, out=cetEtE1);
+    //Nand(a=ctEntE0, b=cetEtE1, out=E);
+}

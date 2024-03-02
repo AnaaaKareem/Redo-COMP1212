@@ -1,15 +1,12 @@
-// File name: FTwo.hdl
 /**
  * FTwo gate.
+ * File name: FTwo.hdl
+ * Description: Used as an OR Operation
+ * Used in: FALL
  *
  * Inputs: A, B, C, D
  * Outputs: F, G
- *
- * Inputs used: A, B, C, D
- *
- * Logic Circuit:
- * AC -> F
- * BD -> G
+ * 
  */
 
 CHIP FTwo {

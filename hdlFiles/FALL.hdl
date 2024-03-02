@@ -1,14 +1,11 @@
-// File name: FALL.hdl
 /**
  * FALL gate.
+ * File name: FALL.hdl
+ * Description: Selects between different logic circuits / operations similar to an Arithmetic Logic Unit (ALU).
+ * Used in: FSEQ
  *
  * Inputs: A, B, C, D, f0, f1
  * Outputs: E, F, G
- *
- * Inputs used: A, B, C, D, f0, f1
- *
- * Logic Circuit:
- * 
  * 
  */
 
@@ -18,27 +15,27 @@ CHIP FALL {
 
     PARTS:
 
-    // Import F chips
-    FZero(A=A, B=B, C=C, D=D, F=fzeroF, G=fzeroG);
-    FOne(A=A, B=B, C=C, D=D, F=foneF, G=foneG);
-    FTwo(A=A, B=B, C=C, D=D, F=ftwoF, G=ftwoG);
-    FThree(A=A, B=B, C=C, D=D, E=ethreeE, F=fthreeF, G=fthreeG);
-
-    // Choosing the Output F
-    Mux(a=foneF, b=fzeroF, sel=f0, out=choiceF1);
-    Mux(a=fthreeF, b=ftwoF, sel=f0, out=choiceF2);
-    Mux(a=choiceF2, b=choiceF1, sel=f1, out=F);
-
-    // Choosing the Output G
-    Mux(a=foneG, b=fzeroG, sel=f0, out=choiceG1);
-    Mux(a=fthreeG, b=ftwoG, sel=f0, out=choiceG2);
-    Mux(a=choiceG2, b=choiceG1, sel=f1, out=G);
+    // Negating the function decoder control lines
+    Not(in=f0, out=nf0);
+    Not(in=f1, out=nf1);
 
     // Choosing the Output E
-    Not(in=f0, out=Notf0);
-    Not(in=f1, out=Notf1);
-    And(a=Notf0, b=Notf1, out=trueE);
-    
-    // DMux(in=ethreeE, sel=trueE, a=a, b=E);
-    Mux(a=trueE, b=ethreeE, sel=trueE, out=E);
+    And(a=nf0, b=nf1, out=passE);
+    DMux(in=THE, sel=passE, a=a, b=E);
+
+    // Import F chips
+    FZero(A=A, B=B, C=C, D=D, F=ZF, G=ZG);
+    FOne(A=A, B=B, C=C, D=D, F=OF, G=OG);
+    FTwo(A=A, B=B, C=C, D=D, F=TF, G=TG);
+    FThree(A=A, B=B, C=C, D=D, E=THE, F=THF, G=THG);
+
+    // Choosing the Output F
+    Mux(a=OF, b=ZF, sel=f0, out=CF1);
+    Mux(a=THF, b=TF, sel=f0, out=CF2);
+    Mux(a=CF2, b=CF1, sel=f1, out=F);
+
+    // Choosing the Output G
+    Mux(a=OG, b=ZG, sel=f0, out=CG1);
+    Mux(a=THG, b=TG, sel=f0, out=CG2);
+    Mux(a=CG2, b=CG1, sel=f1, out=G);
 }
