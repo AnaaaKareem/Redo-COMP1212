@@ -12,6 +12,10 @@
  * If load is equal to 1 pass the current C and D value from current Inputs
  * If load is equal to 0 recall the previous outputs F and G to be used as inputs for 
  * current C and D.
+ *
+ * Gimmik:
+ * Used to FALL chips and two DFFs each for F & G to be stored at the tick
+ * and recalled at the next tick (skipping the tock).
  * 
  */
 
@@ -21,24 +25,26 @@ CHIP FSEQ {
 
     PARTS:
 
-    Not(in=load, out=notload);
-    Mux(a=load, b=notload, sel=load, out=zero);
-    Mux(a=notload, b=load, sel=load, out=one);
-
-    // Perform Calculation
+    // Perform Calculation When Load is 1
     FALL(f0=f0, f1=f1, A=A, B=B, C=C, D=D, E=E1, F=F1, G=G1);
 
+    // Acts as a buffer
     FALL(f0=f0, f1=f1, A=A, B=B, C=RecallF, D=RecallG, E=E0, F=F0, G=G0);
 
+    // Used to store and recall F to C
     Mux(a=F0, b=F1, sel=load, out=StoreF);
     DFF(in=StoreF, out=RecallF);
     DFF(in=RecallF, out=RF);
+
+    // Used to store and recall G to D
     Mux(a=G0, b=G1, sel=load, out=StoreG);
     DFF(in=StoreG, out=RecallG);
     DFF(in=RecallG, out=RG);
 
+    // Perform Calculation When Load is 1
     FALL(f0=f0, f1=f1, A=A, B=B, C=RF, D=RG, E=E00, F=F00, G=G00);
 
+    // Outputs the values
     Mux(a=E00, b=E1, sel=load, out=E);
     Mux(a=F00, b=F1, sel=load, out=F);
     Mux(a=G00, b=G1, sel=load, out=G);
