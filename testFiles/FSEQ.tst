@@ -13,62 +13,57 @@ set C 1,
 set D 1,
 tick,
 tock,
-
 output;
 
 
 set load 0,
 set f1 0,
 set f0 0,
+tick,
+output;
+tock,
+output;
+
+set f1 1,
+set f0 1,
+tick,
+output;
+tock,
+output;
+
+
+set f1 0,
+set f0 0,
+tick,
+output;
+tock,
+output;
+
+
+set f1 0,
+set f0 0,
+tick,
+output;
+tock,
+output;
 
 tick,
+output;
 tock,
+output;
 
+set f1 0,
+set f0 0,
+
+tick,
+output;
+tock,
 output;
 
 set f1 1,
 set f0 1,
 
 tick,
-tock,
-
 output;
-
-
-set f1 0,
-set f0 0,
-
-tick,
 tock,
-
-output;
-
-
-set f1 0,
-set f0 0,
-
-tick,
-tock,
-
-output;
-
-tick,
-tock,
-
-output;
-
-set f1 0,
-set f0 0,
-
-tick,
-tock,
-
-output;
-
-set f1 1,
-set f0 1,
-
-tick,
-tock,
-
 output;
