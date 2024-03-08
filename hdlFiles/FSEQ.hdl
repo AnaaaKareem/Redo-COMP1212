@@ -21,27 +21,25 @@ CHIP FSEQ {
 
     PARTS:
 
-    // Store the previous D value
-    DFF(in=NewD, out=NextD);
-    Not(in=Fin, out=NotFin);
-
-    // Output F and G
-    And(a=Fin, b=Fin, out=F);
-    And(a=Gin, b=Gin, out=G);
-
-    // Check load to either pass C and D or recall F and G
-    Mux(a=prevF, b=C, sel=load, out=NewC);
-    Mux(a=prevG, b=D, sel=load, out=NewD);
+    Not(in=load, out=notload);
+    Mux(a=load, b=notload, sel=load, out=zero);
+    Mux(a=notload, b=load, sel=load, out=one);
 
     // Perform Calculation
-    FALL(f0=f0, f1=f1, A=A, B=B, C=NewC, D=NewD, E=E, F=Fin, G=Gin);
+    FALL(f0=f0, f1=f1, A=A, B=B, C=C, D=D, E=E1, F=F1, G=G1);
 
-    // Check for load to negate the value of C in t+1
-    Mux(a=Fin, b=NotFin, sel=load, out=fin);
-    DFF(in=fin, out=prevF);
+    FALL(f0=f0, f1=f1, A=A, B=B, C=RecallF, D=RecallG, E=E0, F=F0, G=G0);
 
-    // Store and recall Gt for D+1
-    DFF(in=Gin, out=g);
-    DFF(in=g, out=gg);
-    Mux(a=gg, b=g, sel=NextD, out=prevG);
+    Mux(a=F0, b=F1, sel=load, out=StoreF);
+    DFF(in=StoreF, out=RecallF);
+    DFF(in=RecallF, out=RF);
+    Mux(a=G0, b=G1, sel=load, out=StoreG);
+    DFF(in=StoreG, out=RecallG);
+    DFF(in=RecallG, out=RG);
+
+    FALL(f0=f0, f1=f1, A=A, B=B, C=RF, D=RG, E=E00, F=F00, G=G00);
+
+    Mux(a=E00, b=E1, sel=load, out=E);
+    Mux(a=F00, b=F1, sel=load, out=F);
+    Mux(a=G00, b=G1, sel=load, out=G);
 }
