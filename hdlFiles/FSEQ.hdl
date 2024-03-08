@@ -12,10 +12,6 @@
  * If load is equal to 1 pass the current C and D value from current Inputs
  * If load is equal to 0 recall the previous outputs F and G to be used as inputs for 
  * current C and D.
- *
- * Gimmik:
- * Used to FALL chips and two DFFs each for F & G to be stored at the tick
- * and recalled at the next tick (skipping the tock).
  * 
  */
 
