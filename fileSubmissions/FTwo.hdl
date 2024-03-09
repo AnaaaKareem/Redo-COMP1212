@@ -1,0 +1,23 @@
+/**
+ * FTwo gate.
+ * File name: FTwo.hdl
+ * Description: Used as an OR Operation
+ * Used in: FALL
+ *
+ * Inputs: A, B, C, D
+ * Outputs: F, G
+ * 
+ */
+
+CHIP FTwo {
+    IN A, B, C, D;
+    OUT F, G;
+
+    PARTS:
+
+    // Output for F gate
+    Or(a=A, b=C, out=F);
+
+    // Output for G gate
+    Or(a=B, b=D, out=G);
+}

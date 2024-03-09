@@ -1,0 +1,86 @@
+/**
+ * FThree gate.
+ * File name: FThree.hdl
+ * Description: Used as an ADD operation with an extra output as a carry
+ * Used in: FALL
+ *
+ * Inputs: A, B, C, D
+ * Outputs: E, F, G
+ * 
+ */
+
+CHIP FThree {
+    IN A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    // Not Gates
+    Not(in=A, out=NA); // ¬A
+    Not(in=B, out=NB); // ¬B
+    Not(in=C, out=NC); // ¬C
+    Not(in=D, out=ND); // ¬D
+
+    //// E Gate Circuit
+
+    // AC
+    And(a=A, b=C, out=AC);
+    
+    // BCD
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=D, out=BCD);
+
+    // ABD
+    And(a=A, b=B, out=AB);
+    And(a=AB, b=D, out=ABD);
+
+    // Output for E gate
+    Or(a=AC, b=BCD, out=ACBCD);
+    Or(a=ACBCD, b=ABD, out=E);
+
+    //// F Gate Circuit
+
+    // ¬A¬BC
+    And(a=NA, b=NB, out=¬A¬B);
+    And(a=¬A¬B, b=C, out=¬A¬BC);
+
+    // ¬AC¬D
+    And(a=NA, b=C, out=¬AC);
+    And(a=¬AC, b=ND, out=¬AC¬D);
+
+    // A¬B¬C
+    And(a=A, b=NB, out=A¬B);
+    And(a=A¬B, b=NC, out=A¬B¬C);
+
+    // A¬C¬D
+    And(a=A, b=NC, out=A¬C);
+    And(a=A¬C, b=ND, out=A¬C¬D);
+
+    // ¬AB¬CD
+    And(a=NA, b=B, out=¬AB);
+    And(a=NC, b=D, out=¬CD);
+    And(a=¬AB, b=¬CD, out=¬AB¬CD);
+
+    // ABCD
+    // AB Line 34
+    And(a=C, b=D, out=CD);
+    And(a=AB, b=CD, out=ABCD);
+
+    // Output for F gate
+    Or(a=¬A¬BC, b=¬AC¬D, out=¬A¬BC¬AC¬D);
+    Or(a=A¬B¬C, b=A¬C¬D, out=A¬B¬CA¬C¬D);
+    Or(a=¬AB¬CD, b=ABCD, out=¬AB¬CDABCD);
+    Or(a=¬A¬BC¬AC¬D, b=A¬B¬CA¬C¬D, out=¬A¬BC¬AC¬DA¬B¬CA¬C¬D);
+    Or(a=¬A¬BC¬AC¬DA¬B¬CA¬C¬D, b=¬AB¬CDABCD, out=F);
+
+    //// G Gate Circuit
+
+    // ¬BD
+    And(a=NB, b=D, out=¬BD);
+
+    // B¬D
+    And(a=B, b=ND, out=B¬D);
+
+    // Output for G gate
+    Or(a=¬BD, b=B¬D, out=G);
+}

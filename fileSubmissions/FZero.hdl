@@ -1,0 +1,23 @@
+/**
+ * FZero gate.
+ * File name: FZero.hdl
+ * Description: Used to negate the output
+ * Used in: FALL
+ *
+ * Inputs: A, B, C, D
+ * Outputs: F, G
+ * 
+ */
+
+CHIP FZero {
+    IN A, B, C, D;
+    OUT F, G;
+
+    PARTS:
+
+    // Output for F gate
+    Nand(a=C, b=C, out=F);
+
+    // Output for G gate
+    Nand(a=D, b=D, out=G);
+}

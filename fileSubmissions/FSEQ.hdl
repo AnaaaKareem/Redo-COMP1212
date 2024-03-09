@@ -1,7 +1,7 @@
 /**
  * FSEQ gate.
  * File name: FSEQ.hdl
- * Description: Used to perform basic calculations using FALL chip
+ * Description: Used to perform basic calulations using FALL chip
  * to select between different operations while using Data Flip-Flop 
  * to store and recall previous value.
  *

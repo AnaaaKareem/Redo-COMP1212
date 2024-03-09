@@ -1,0 +1,41 @@
+/**
+ * FALL gate.
+ * File name: FALL.hdl
+ * Description: Selects between different logic circuits / operations similar to an Arithmetic Logic Unit (ALU).
+ * Used in: FSEQ
+ *
+ * Inputs: A, B, C, D, f0, f1
+ * Outputs: E, F, G
+ * 
+ */
+
+CHIP FALL {
+    IN f0, f1, A, B, C, D;
+    OUT E, F, G;
+
+    PARTS:
+
+    // Negating the function decoder control lines
+    Not(in=f0, out=nf0);
+    Not(in=f1, out=nf1);
+
+    // Choosing the Output E
+    And(a=nf0, b=nf1, out=passE);
+    DMux(in=THE, sel=passE, a=a, b=E);
+
+    // Import F chips
+    FZero(A=A, B=B, C=C, D=D, F=ZF, G=ZG);
+    FOne(A=A, B=B, C=C, D=D, F=OF, G=OG);
+    FTwo(A=A, B=B, C=C, D=D, F=TF, G=TG);
+    FThree(A=A, B=B, C=C, D=D, E=THE, F=THF, G=THG);
+
+    // Choosing the Output F
+    Mux(a=OF, b=ZF, sel=f0, out=CF1);
+    Mux(a=THF, b=TF, sel=f0, out=CF2);
+    Mux(a=CF2, b=CF1, sel=f1, out=F);
+
+    // Choosing the Output G
+    Mux(a=OG, b=ZG, sel=f0, out=CG1);
+    Mux(a=THG, b=TG, sel=f0, out=CG2);
+    Mux(a=CG2, b=CG1, sel=f1, out=G);
+}
